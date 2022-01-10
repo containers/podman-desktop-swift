@@ -1,4 +1,4 @@
-# podman-desktop-macos
+# podman-desktop
 
-podman-desktop-macos is a project to create a system tray for managing podman
-machines on mac os
+podman-desktop is a project to create a system tray for managing podman
+machines
