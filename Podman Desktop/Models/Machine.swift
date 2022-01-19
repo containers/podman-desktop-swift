@@ -53,14 +53,29 @@ class AllMachines: ObservableObject{
             
         }
         catch {
-            print("asdsad")
             print("\(error)") // need to write custom errors
         }
         
         self.lst=jsons
-        print(lst)
-        let t = type(of: lst[0].name)
-            print("of type '\(t)'")
+    }
+    func getRunning() -> (isRunning: Bool, machineInfo: Machine?){
+        let getRunning = AllMachines()
+        for mach in getRunning.lst{
+            if mach.running{
+                return(true, mach)
+            }
+        }
+        return (false, nil)
+    }
+        
+    func getCLIDefault() -> Machine?{
+        let getRunning = AllMachines()
+        for mach in getRunning.lst{
+            if mach.dflt{
+                return(mach)
+            }
+        }
+        return(nil)
     }
 }
 
@@ -81,7 +96,6 @@ class DefaultMachine: ObservableObject {
     init(){
         do {
             let output = try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "list", "--format", "json"])
-            print(output.1)
             let jsonData = output.1.data(using: .utf8)!
             jsons = try! JSONDecoder().decode([Machine].self, from: jsonData)
 
@@ -89,7 +103,6 @@ class DefaultMachine: ObservableObject {
             
         }
         catch {
-            print("asdsad")
             print("\(error)") //handle or silence the error here
         }
         self.name = jsons[0].name
@@ -103,4 +116,37 @@ class DefaultMachine: ObservableObject {
         self.memory=jsons[0].memory
         self.disksize=jsons[0].disksize
     }
+}
+
+class NewMachine: ObservableObject {
+    @Published var name: String
+    @Published var ignitionPath: String
+    @Published var imagePath: String
+    @Published var cpus: Int
+    @Published var memory: Int
+    @Published var disksize: Int
+    
+    var jsons = [Machine]()
+    
+    init(){
+        self.name = "New Machine"
+        self.ignitionPath=""
+        self.imagePath="next"
+        self.cpus=1
+        self.memory=2040
+        self.disksize=10
+    }
+    func validate(){
+        
+    }
+    func create() throws {
+        do {
+            try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "init", "--cpus", String(cpus), "--memory", String(memory), "--disk-size", String(disksize), "--ignition-path", ignitionPath, "--image-path", imagePath, name])
+            
+        }
+        catch {
+            print("\(error)") // need to write custom errors
+        }
+    }
+}
 

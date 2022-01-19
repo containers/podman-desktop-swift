@@ -13,12 +13,13 @@
 		1464F9E827544393006A6813 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1464F9E727544393006A6813 /* Preview Assets.xcassets */; };
 		1464FA0F2758ABB2006A6813 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464FA0E2758ABB2006A6813 /* HeaderView.swift */; };
 		1478D409278E2820004DF7BC /* MachineInitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478D408278E2820004DF7BC /* MachineInitView.swift */; };
-		14912A86275E9C2400ACF55D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14912A85275E9C2400ACF55D /* File.swift */; };
-		14912A88275EBFE200ACF55D /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14912A87275EBFE200ACF55D /* ModelData.swift */; };
+		14912A86275E9C2400ACF55D /* Machine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14912A85275E9C2400ACF55D /* Machine.swift */; };
+		14912A88275EBFE200ACF55D /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14912A87275EBFE200ACF55D /* Shell.swift */; };
 		14912A8C2760F3F200ACF55D /* BodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14912A8B2760F3F200ACF55D /* BodyView.swift */; };
 		14A0A7442761ECAC0063F087 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A0A7432761ECAC0063F087 /* MenuBar.swift */; };
 		14A0A7462761ED1D0063F087 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A0A7452761ED1D0063F087 /* MenuBarController.swift */; };
 		14A0A748276250430063F087 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A0A747276250430063F087 /* SettingsView.swift */; };
+		14A5DF0A2790A49C0051B9AE /* MachineSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5DF092790A49C0051B9AE /* MachineSelectView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +31,13 @@
 		1464F9E927544393006A6813 /* Podman_Desktop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Podman_Desktop.entitlements; sourceTree = "<group>"; };
 		1464FA0E2758ABB2006A6813 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		1478D408278E2820004DF7BC /* MachineInitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineInitView.swift; sourceTree = "<group>"; };
-		14912A85275E9C2400ACF55D /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		14912A87275EBFE200ACF55D /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		14912A85275E9C2400ACF55D /* Machine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Machine.swift; sourceTree = "<group>"; };
+		14912A87275EBFE200ACF55D /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		14912A8B2760F3F200ACF55D /* BodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyView.swift; sourceTree = "<group>"; };
 		14A0A7432761ECAC0063F087 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		14A0A7452761ED1D0063F087 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		14A0A747276250430063F087 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		14A5DF092790A49C0051B9AE /* MachineSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineSelectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				1464F9E227544392006A6813 /* ContentView.swift */,
 				14A0A747276250430063F087 /* SettingsView.swift */,
 				1478D408278E2820004DF7BC /* MachineInitView.swift */,
+				14A5DF092790A49C0051B9AE /* MachineSelectView.swift */,
 				1464FA0E2758ABB2006A6813 /* HeaderView.swift */,
 				14912A8B2760F3F200ACF55D /* BodyView.swift */,
 				14A0A7432761ECAC0063F087 /* MenuBar.swift */,
@@ -102,8 +105,8 @@
 		14912A84275E632500ACF55D /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				14912A85275E9C2400ACF55D /* File.swift */,
-				14912A87275EBFE200ACF55D /* ModelData.swift */,
+				14912A85275E9C2400ACF55D /* Machine.swift */,
+				14912A87275EBFE200ACF55D /* Shell.swift */,
 				14A0A7452761ED1D0063F087 /* MenuBarController.swift */,
 			);
 			path = Models;
@@ -185,8 +188,9 @@
 				14A0A7442761ECAC0063F087 /* MenuBar.swift in Sources */,
 				1464F9E327544392006A6813 /* ContentView.swift in Sources */,
 				14A0A748276250430063F087 /* SettingsView.swift in Sources */,
-				14912A86275E9C2400ACF55D /* File.swift in Sources */,
-				14912A88275EBFE200ACF55D /* ModelData.swift in Sources */,
+				14912A86275E9C2400ACF55D /* Machine.swift in Sources */,
+				14A5DF0A2790A49C0051B9AE /* MachineSelectView.swift in Sources */,
+				14912A88275EBFE200ACF55D /* Shell.swift in Sources */,
 				1464FA0F2758ABB2006A6813 /* HeaderView.swift in Sources */,
 				1464F9E127544392006A6813 /* Podman_DesktopApp.swift in Sources */,
 			);
