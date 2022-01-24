@@ -10,6 +10,12 @@ import SwiftUI
 @main
 struct Podman_DesktopApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    init() {
+            if !UserDefaults.standard.bool(forKey: "didLaunchBefore") {
+                UserDefaults.standard.set(true, forKey: "didLaunchBefore")
+            }
+    }
+        
     var body: some Scene {
         Settings {
             EmptyView()

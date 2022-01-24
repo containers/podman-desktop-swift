@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var currMachine = DefaultMachine()
-
+    @Binding var settings: Bool
     
     var body: some View {
         VStack {
@@ -21,6 +21,19 @@ struct SettingsView: View {
                             .multilineTextAlignment(.leading)
                             .font(.title2)
                         Spacer()
+                        Button(action: {
+                            self.settings.toggle()
+                                    }){
+                                        Image(systemName: "xmark")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .foregroundColor(.gray)
+                                            .frame(width: 20, height: 20)
+                                    }
+                                    .padding(.trailing)
+                                    .opacity(1)
+                                    .buttonStyle(PlainButtonStyle())
+
                     }
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                 }
@@ -100,8 +113,9 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//    @Binding var settings: Bool
+//    static var previews: some View {
+//        SettingsView(settings: settings)
+//    }
+//}

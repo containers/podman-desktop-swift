@@ -21,7 +21,7 @@ struct HeaderView: View {
                     .frame(width: 200)
                 MachineControls(settings: $settings)
             }
-           }
+        }
     }
 }
 
@@ -36,7 +36,6 @@ struct MachineControls: View{
             Spacer()
             Text ("Podman is:")
                 .foregroundColor(.gray)
-//            ProgressView()
 
             Text(machineOn.displayString)
                     .foregroundColor(.white)

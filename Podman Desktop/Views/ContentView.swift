@@ -13,23 +13,25 @@ struct ContentView: View {
     var machineOn = MachineOn()
     @State private var settings = false
     var body: some View {
-        VStack{
+        VStack(spacing: 0){
             HeaderView(settings: $settings)
                 .frame(height: 70)
                 .environmentObject(machineOn)
 
-            
-//            if self.settings{
-//                SettingsView()
-//                    .frame(height: 300)
-//            }else{
-//                BodyView()
-//            }
-//            SettingsView()
+//            AnotherView()
+            if self.settings{
+                SettingsView(settings: $settings)
+                    .frame(height: 300)
+                Spacer()
+            }else{
+                BodyView()
+            }
+//            SettingsView(settings: $settings)
 //                .frame(height: 300)
 //            MachineInitView()
-            BodyView()
             Spacer()
+//            BodyView()
+//            Spacer()
         }
         .ignoresSafeArea()
 
@@ -44,8 +46,15 @@ class MachineOn: ObservableObject {
     @Published var isOn: Bool
     @Published var displayString: String
     init(){
-        self.isOn = false
-        self.displayString="not running"
+        let machs = AllMachines()
+        let isRunning = machs.getRunning().isRunning
+        if isRunning{
+            self.isOn = true
+            self.displayString="running"
+        } else {
+            self.isOn = false
+            self.displayString="not running"
+        }
     }
     
 }
