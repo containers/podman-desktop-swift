@@ -19,6 +19,9 @@ struct Machine: Hashable, Codable {
     var cpus: Int
     var memory: String
     var disksize: String
+    var port: Int
+    var remoteUsername: String
+    var identityPath: String
     
     private enum CodingKeys: String, CodingKey {
         case name = "Name"
@@ -31,105 +34,171 @@ struct Machine: Hashable, Codable {
         case cpus = "CPUs"
         case memory = "Memory"
         case disksize = "DiskSize"
+        case port = "Port"
+        case remoteUsername = "RemoteUsername"
+        case identityPath = "IdentityPath"
 
     }
-}
-
-struct MachineList: Decodable {
-  var machines: [Machine]
 }
 
 class AllMachines: ObservableObject{
     @Published var lst: [Machine]
-    var jsons = [Machine]()
+    @Published var activeMachine: Machine?
+    @Published var defaultConnection: Bool
+    @Published var running: Bool
+    @Published var runningString: String
+    @Published var noMachines: Bool
+    // TODO: check if warn if active machine is not default connection
+    // TODO: check if no machines exist
+    
     
     init(){
+        self.lst=[]
+        activeMachine = nil
+        defaultConnection = false
+        running = false
+        runningString = "not running"
+        noMachines = false
+    }
+    
+    func loadLst(){
+        var jsons = [Machine]()
         do {
-            let output = try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "list", "--format", "json"])
-            print(output.1)
+            let output = try machineList()
             let jsonData = output.1.data(using: .utf8)!
             jsons = try! JSONDecoder().decode([Machine].self, from: jsonData)
-
-            
         }
         catch {
-            print("\(error)") // need to write custom errors
+            print("\(error)") // TODO: plumb custom errors
         }
-        
         self.lst=jsons
     }
-    func getRunning() -> (isRunning: Bool, machineInfo: Machine?){
-        let getRunning = AllMachines()
-        for mach in getRunning.lst{
+    func getRunning() -> Machine?{
+        for mach in self.lst{
             if mach.running{
-                return(true, mach)
+                return mach
             }
         }
-        return (false, nil)
+        return nil
     }
-        
+
+    func isRunning() -> Bool?{
+        return activeMachine?.running
+    }
+
+    func getMachine(name: String) -> Machine?{
+       for mach in self.lst{
+           if mach.name == name{
+               return mach
+           }
+       }
+       return nil
+   }
+
     func getCLIDefault() -> Machine?{
-        let getRunning = AllMachines()
-        for mach in getRunning.lst{
+        for mach in self.lst{
             if mach.dflt{
                 return(mach)
             }
         }
         return(nil)
     }
-}
 
-class DefaultMachine: ObservableObject {
-    @Published var name: String
-    @Published var `default`: Bool
-    @Published var created: String
-    @Published var running: Bool
-    @Published var lastup: String
-    @Published var stream: String
-    @Published var vmtype: String
-    @Published var cpus: Int
-    @Published var memory: String
-    @Published var disksize: String
-    
-    var jsons = [Machine]()
-    
-    init(){
-        do {
-            let output = try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "list", "--format", "json"])
-            let jsonData = output.1.data(using: .utf8)!
-            jsons = try! JSONDecoder().decode([Machine].self, from: jsonData)
+    func reloadAll(){
+        loadLst()
+        loadActiveMachine()
+        checkDefaultConnection()
+        loadRunning()
 
-
-            
-        }
-        catch {
-            print("\(error)") //handle or silence the error here
-        }
-        self.name = jsons[0].name
-        self.default = jsons[0].dflt
-        self.created=jsons[0].created
-        self.running=jsons[0].running
-        self.lastup=jsons[0].lastup
-        self.stream=jsons[0].stream
-        self.vmtype=jsons[0].vmtype
-        self.cpus=jsons[0].cpus
-        self.memory=jsons[0].memory
-        self.disksize=jsons[0].disksize
     }
+
+    func loadRunning() {
+        running = activeMachine!.running
+        runningString = activeMachine!.running ? "running" : "not running"
+    }
+    func loadActiveMachine() {
+            // 1. Active machine is running
+
+            // No machines are running, so no active machine.
+            if lst.count == 0{
+                activeMachine = nil
+                return
+            }
+            // If a machine is running, it is ALWAYS the active machine
+            let runningMachine = getRunning()
+            if runningMachine != nil{
+                setActiveMachine(machine: runningMachine!)
+                return
+            }
+
+            // Check which machine was active last, that is the active machine
+            let lastRunName = UserDefaults.standard.string(forKey: "activeName")
+            if lastRunName != nil{
+                // Check if cached machine name actually still exists
+                let maybeMachine = getMachine(name: lastRunName!)
+                if maybeMachine == nil{
+                    // Cached last active no longer exists, clear
+                    UserDefaults.standard.set("", forKey: "activeName")
+                } else {
+                    setActiveMachine(machine: maybeMachine!)
+                    return
+                }
+            }
+            // CLI default machine is the active machine
+            let cliDef = getCLIDefault()
+            if cliDef != nil {
+                setActiveMachine(machine: cliDef!)
+                return
+            }
+            // No previously active machine, just choose the first machine on the list
+            setActiveMachine(machine: lst[0])
+            return
+    }
+
+    func setActiveMachine(machine: Machine){
+        activeMachine = machine
+        UserDefaults.standard.set(machine.name, forKey: "activeName")
+    }
+
+    func changeActiveMachine(machine: Machine){
+        activeMachine = machine
+        UserDefaults.standard.set(activeMachine!.name, forKey: "activeName")
+    }
+
+    func checkDefaultConnection(){
+        if activeMachine == nil{
+            defaultConnection = false
+            return
+        }
+        defaultConnection = activeMachine!.dflt
+    }
+    
+    func startActive() async throws -> Int32{
+        reloadAll()
+        let output = try shell(arguments: ["podman","machine", "start", activeMachine!.name])
+        return output.0
+    }
+    
+    func stopActive() async throws -> Int32{
+        reloadAll()
+        let output = try shell(arguments: ["podman","machine", "stop", activeMachine!.name])
+        return output.0
+    }
+
 }
 
-class NewMachine: ObservableObject {
+    
+class NewMachineInit: ObservableObject {
     @Published var name: String
     @Published var ignitionPath: String
     @Published var imagePath: String
     @Published var cpus: Int
     @Published var memory: Int
     @Published var disksize: Int
-    
-    var jsons = [Machine]()
-    
+
+
     init(){
-        self.name = "New Machine"
+        self.name = "new_machine"
         self.ignitionPath=""
         self.imagePath="next"
         self.cpus=1
@@ -137,15 +206,16 @@ class NewMachine: ObservableObject {
         self.disksize=10
     }
     func validate(){
-        
+        //TODO: validate
+
     }
     func create() throws {
         do {
-            try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "init", "--cpus", String(cpus), "--memory", String(memory), "--disk-size", String(disksize), "--ignition-path", ignitionPath, "--image-path", imagePath, name])
-            
+            try machineInit(mach:self)
+
         }
         catch {
-            print("\(error)") // need to write custom errors
+            print("\(error)") // TODO: plumb custom errors
         }
     }
 }

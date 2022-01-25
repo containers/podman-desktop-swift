@@ -37,8 +37,18 @@ struct MenuBar: View {
                                         .foregroundColor(.black)
                     
                                 }
-                                Toggle("", isOn: $machineOn)
-                        .toggleStyle(SwitchToggleStyle(tint: Color("toggle-on")))
+                    Button {
+                        machineOn.toggle()
+                    } label: {
+                        Image(systemName: "power.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(machineOn ? .green : .white, machineOn ? .white : .purple )
+                            .frame(width: 50, height: 50)
+                    }
+                    .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+                    
+                    .buttonStyle(PlainButtonStyle())
                     Spacer()
                     Button("Manage Podman"){
                       openPreferences()
