@@ -10,54 +10,43 @@ import SwiftUI
 
 
 struct ContentView: View {
-    var machineOn = MachineOn()
-    @State private var settings = false
+    var allMachines = AllMachines()
+    @StateObject var viewRouter = ViewRouter()
     var body: some View {
         VStack(spacing: 0){
-            HeaderView(settings: $settings)
+            HeaderView()
                 .frame(height: 70)
-                .environmentObject(machineOn)
+                .environmentObject(allMachines)
+                .environmentObject(viewRouter)
+                .onAppear {
+                    allMachines.reloadAll()
+                }
 
-//            AnotherView()
-            if self.settings{
-                SettingsView(settings: $settings)
-                    .frame(height: 300)
-                Spacer()
-            }else{
+            switch viewRouter.currentPage {
+            case .land:
                 BodyView()
+                    .environmentObject(viewRouter)
+                    .environmentObject(allMachines)
+            case .settings:
+                SettingsView()
+                    .environmentObject(viewRouter)
+                    .environmentObject(allMachines)
+            case .machineSelect:
+                MachineSelectView()
+                    .environmentObject(viewRouter)
+                    .environmentObject(allMachines)
+            case .machineInit:
+                MachineInitView()
+                    .environmentObject(viewRouter)
+                    .environmentObject(allMachines)
             }
-//            SettingsView(settings: $settings)
-//                .frame(height: 300)
-//            MachineInitView()
             Spacer()
-//            BodyView()
-//            Spacer()
         }
         .ignoresSafeArea()
-
-//
-//        .menuStyle(BorderlessButtonMenuStyle())
         .frame(minWidth: 800, maxWidth: .infinity, minHeight: 500,  maxHeight: .infinity)
-        .environmentObject(machineOn)
     }
 }
-    
-class MachineOn: ObservableObject {
-    @Published var isOn: Bool
-    @Published var displayString: String
-    init(){
-        let machs = AllMachines()
-        let isRunning = machs.getRunning().isRunning
-        if isRunning{
-            self.isOn = true
-            self.displayString="running"
-        } else {
-            self.isOn = false
-            self.displayString="not running"
-        }
-    }
-    
-}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

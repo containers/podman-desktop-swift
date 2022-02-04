@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BodyView: View {
-    @EnvironmentObject var machineOn: MachineOn
+    @EnvironmentObject var allMachines: AllMachines
     var body: some View {
         VStack{
         Spacer()
@@ -21,8 +21,34 @@ struct BodyView: View {
                 .padding()
             Text("To start working with containers on Podman, \nyou'll need to run the Podman service.")
                 .multilineTextAlignment(.center)
-            Toggle("Run Podman", isOn: $machineOn.isOn)
-                .toggleStyle(SwitchToggleStyle(tint: Color("toggle-on")))
+            Button {
+                allMachines.reloadAll()
+                if !allMachines.running{
+                    Task{
+                        do {
+                            try await allMachines.startActive()
+                            allMachines.reloadAll()
+
+                        }
+                    catch {print("error")} // TODO: plumb custom errors
+                    }
+                    
+                } else {
+                    Task{
+                    do {try await allMachines.stopActive()
+                        allMachines.reloadAll()
+                    }
+                    catch {print("error")} // TODO: plumb custom errors
+                    }
+                }
+            } label: {
+                Image(systemName: "power.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(allMachines.running ? .green : .white, allMachines.running ? .white : .purple )
+                    .frame(width: 50, height: 50)
+            }.padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+            .buttonStyle(PlainButtonStyle())
             Spacer()
         }
     }

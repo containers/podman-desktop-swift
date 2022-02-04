@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1425F9D527A7E3E200057FDD /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1425F9D427A7E3E200057FDD /* ViewRouter.swift */; };
 		1464F9E127544392006A6813 /* Podman_DesktopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464F9E027544392006A6813 /* Podman_DesktopApp.swift */; };
 		1464F9E327544392006A6813 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464F9E227544392006A6813 /* ContentView.swift */; };
 		1464F9E527544393006A6813 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1464F9E427544393006A6813 /* Assets.xcassets */; };
@@ -20,9 +21,11 @@
 		14A0A7462761ED1D0063F087 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A0A7452761ED1D0063F087 /* MenuBarController.swift */; };
 		14A0A748276250430063F087 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A0A747276250430063F087 /* SettingsView.swift */; };
 		14A5DF0A2790A49C0051B9AE /* MachineSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5DF092790A49C0051B9AE /* MachineSelectView.swift */; };
+		14B5E91027A0484800D756F4 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5E90F27A0484800D756F4 /* Errors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1425F9D427A7E3E200057FDD /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		1464F9DD27544392006A6813 /* Podman Desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Podman Desktop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1464F9E027544392006A6813 /* Podman_DesktopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podman_DesktopApp.swift; sourceTree = "<group>"; };
 		1464F9E227544392006A6813 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -38,6 +41,7 @@
 		14A0A7452761ED1D0063F087 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		14A0A747276250430063F087 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		14A5DF092790A49C0051B9AE /* MachineSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineSelectView.swift; sourceTree = "<group>"; };
+		14B5E90F27A0484800D756F4 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +110,9 @@
 			isa = PBXGroup;
 			children = (
 				14912A85275E9C2400ACF55D /* Machine.swift */,
+				1425F9D427A7E3E200057FDD /* ViewRouter.swift */,
 				14912A87275EBFE200ACF55D /* Shell.swift */,
+				14B5E90F27A0484800D756F4 /* Errors.swift */,
 				14A0A7452761ED1D0063F087 /* MenuBarController.swift */,
 			);
 			path = Models;
@@ -183,9 +189,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				14A0A7462761ED1D0063F087 /* MenuBarController.swift in Sources */,
+				1425F9D527A7E3E200057FDD /* ViewRouter.swift in Sources */,
 				14912A8C2760F3F200ACF55D /* BodyView.swift in Sources */,
 				1478D409278E2820004DF7BC /* MachineInitView.swift in Sources */,
 				14A0A7442761ECAC0063F087 /* MenuBar.swift in Sources */,
+				14B5E91027A0484800D756F4 /* Errors.swift in Sources */,
 				1464F9E327544392006A6813 /* ContentView.swift in Sources */,
 				14A0A748276250430063F087 /* SettingsView.swift in Sources */,
 				14912A86275E9C2400ACF55D /* Machine.swift in Sources */,

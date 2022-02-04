@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct MachineInitView: View {
-    
-    @ObservedObject var newMachine = NewMachine()
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var allMachines: AllMachines
+    @ObservedObject var newMachine = NewMachineInit()
     var streams = ["stable", "testing", "next"]
     @State private var vmImg = "fcos"
     @State var customVM = false
     @State var customIgn = false
     @State private var ignFile = ""
     @State var imgFile = ""
-    
+
     var memoryToInt: Binding<Double>{
             Binding<Double>(get: {
                 //returns the score as a Double
@@ -160,15 +161,17 @@ struct MachineInitView: View {
             }
             HStack{
                 Button("Cancel"){
-                    print("go back")
+                    viewRouter.currentPage = .machineSelect
                 }
                 Button("Submit") {
-                               // need to validate data, make sure no fields are emptyhere
+                               // TODO: need to validate data, make sure no fields are emptyhere
                     do{
                         try newMachine.create()
+                        allMachines.reloadAll()
                     } catch {
-                        print("error")
+                        print("error") // TODO: plumb custom errors
                     }
+                    viewRouter.currentPage = .machineSelect
                 }
             }
             .padding(40)

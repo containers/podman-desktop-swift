@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HeaderView: View {
-    @Binding var settings: Bool
+    @EnvironmentObject var viewRouter: ViewRouter
     var body: some View {
         ZStack {
                    Color("podman-purple")
@@ -19,69 +19,69 @@ struct HeaderView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200)
-                MachineControls(settings: $settings)
+                MachineControls()
             }
         }
     }
 }
-
+//
 struct MachineControls: View{
 
-    @Binding var settings: Bool
-    @EnvironmentObject var machineOn: MachineOn
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var allMachines: AllMachines
+    @State var starting: Bool = false
     var body: some View{
-        
-        
+
+
         HStack{
             Spacer()
-            Text ("Podman is:")
+            Text("Podman is:")
                 .foregroundColor(.gray)
-
-            Text(machineOn.displayString)
-                    .foregroundColor(.white)
-
-            let binding = Binding(
-                get: { machineOn.isOn },
-                set: {
-                    if !machineOn.isOn{
-                        do {
-                            machineOn.displayString = "starting"
-                            let output = try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "start"])
-                            if output.0 == 0{
-                            machineOn.isOn = $0
-                                machineOn.displayString = "running"
-                            }
+            if starting{
+            Text("starting")
+                .foregroundColor(.white)
+                ProgressView()
+            } else{
+                Text (allMachines.runningString)
+                .foregroundColor(.white)
+            }
+            Button {
+                allMachines.reloadAll()
+                if !allMachines.running{
+                    Task{
+                        do {starting = true
+                            var exitcode = try await allMachines.startActive()
+                            allMachines.reloadAll()
+                            starting = false
                         }
-                        catch {
-                            print("\(error)") //handle or silence the error here
-                        }
+                    catch {print("error")} // TODO: plumb custom errors
                     }
-                    else{
-                        do {
-                            let output = try shell(launchPath: "/usr/bin/env", arguments: ["podman","machine", "stop"])
-                            if output.0 == 0{
-                            machineOn.isOn = $0
-                            machineOn.displayString = "not running"
-                            }
-                        }
-                        catch {
-                            print("\(error)") //handle or silence the error here
-                        }
-                        
+                    
+                } else {
+                    Task{
+                    do {try await allMachines.stopActive()
+                        allMachines.reloadAll()
+                    }
+                    catch {print("error")} // TODO: plumb custom errors
                     }
                 }
-                   )
-            Toggle("", isOn: binding)
+            } label: {
+                Image(systemName: "power.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(allMachines.running ? .green : .white, allMachines.running ? .white : .purple )
+                    .frame(width: 25, height: 25)
+            }
+            .padding(.trailing)
             
-                .toggleStyle(
-SwitchToggleStyle(tint: Color("toggle-on")))
-
-                            .padding(.trailing)
             Button(action: {
-                self.settings.toggle()
-                            print("gear button")
+                if viewRouter.currentPage == .land{
+                    viewRouter.currentPage = .settings
+                }else{
+                    viewRouter.currentPage = .land
+                }
                         }){
-                            Image(systemName: "gearshape.circle.fill")
+                            Image(systemName: "gearshape")
                                 .resizable()
                                 .scaledToFit()
                                 .foregroundColor(.white)
