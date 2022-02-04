@@ -133,7 +133,7 @@
 			);
 			dependencies = (
 			);
-			name = "Podman Desktop";
+			name = "Podman";
 			productName = "Podman Desktop";
 			productReference = 1464F9DD27544392006A6813 /* Podman Desktop.app */;
 			productType = "com.apple.product-type.application";
