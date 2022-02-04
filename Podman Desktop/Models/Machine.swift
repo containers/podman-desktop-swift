@@ -61,12 +61,16 @@ class AllMachines: ObservableObject{
         noMachines = false
     }
     
+    private static func listMachinesFromPodman() throws -> [Machine]  {
+        let output = try machineList()
+        let jsonData = output.1.data(using: .utf8)!
+        return try! JSONDecoder().decode([Machine].self, from: jsonData)
+    }
+    
     func loadLst(){
         var jsons = [Machine]()
         do {
-            let output = try machineList()
-            let jsonData = output.1.data(using: .utf8)!
-            jsons = try! JSONDecoder().decode([Machine].self, from: jsonData)
+            jsons = try AllMachines.listMachinesFromPodman()
         }
         catch {
             print("\(error)") // TODO: plumb custom errors
