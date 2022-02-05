@@ -117,8 +117,8 @@ class AllMachines: ObservableObject{
     }
 
     func loadRunning() {
-        running = activeMachine!.running
-        runningString = activeMachine!.running ? "running" : "not running"
+        running = activeMachine?.running ?? false // Should we have an extra state to represent “N/A, no machine exists”?
+        runningString = running ? "running" : "not running"
     }
     func loadActiveMachine() {
             // 1. Active machine is running
