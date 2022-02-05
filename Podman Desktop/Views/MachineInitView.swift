@@ -185,7 +185,9 @@ struct MachineInitView: View {
 
 struct MachineInitView_Previews: PreviewProvider {
     static var previews: some View {
-        MachineInitView()
+        VStack {
+            MachineInitView()
+        }
     }
 }
 
