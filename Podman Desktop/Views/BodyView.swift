@@ -56,6 +56,15 @@ struct BodyView: View {
 
 struct BodyView_Previews: PreviewProvider {
     static var previews: some View {
-        BodyView()
+        let situations: [(name: String, allMachines: AllMachines)] = [
+            ("Running", AllMachines.previewWithOneRunningMachine()),
+            ("Stopped", AllMachines.previewWithOneStoppedMachine()),
+            ("No machine", AllMachines.previewWithNoMachines()),
+        ]
+        ForEach(situations, id: \.name) { s in
+            BodyView()
+                .environmentObject(s.allMachines)
+                .previewDisplayName(s.name)
+        }
     }
 }

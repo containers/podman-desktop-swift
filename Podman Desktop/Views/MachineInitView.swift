@@ -188,6 +188,8 @@ struct MachineInitView_Previews: PreviewProvider {
         VStack {
             MachineInitView()
         }
+        .environmentObject(AllMachines.previewWithOneRunningMachine())
+        .environmentObject(ViewRouter())
     }
 }
 

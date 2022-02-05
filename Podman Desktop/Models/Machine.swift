@@ -51,8 +51,13 @@ class AllMachines: ObservableObject{
     // TODO: check if warn if active machine is not default connection
     // TODO: check if no machines exist
     
+    /// Set to `listMachinesFromPodman` on real runs, only exists to support unit tests and previews.
+    private let machineListRetriever: () throws -> [Machine]
     
-    init(){
+    /// Create a new observer of the Podman machine set.
+    /// - Parameter machineListRetriever: A non-default provider of the machine state, intended only to support unit tests and previews.
+    init(machineListRetriever: @escaping () throws -> [Machine] = listMachinesFromPodman) {
+        self.machineListRetriever = machineListRetriever
         self.lst=[]
         activeMachine = nil
         defaultConnection = false
@@ -70,7 +75,7 @@ class AllMachines: ObservableObject{
     func loadLst(){
         var jsons = [Machine]()
         do {
-            jsons = try AllMachines.listMachinesFromPodman()
+            jsons = try self.machineListRetriever()
         }
         catch {
             print("\(error)") // TODO: plumb custom errors
@@ -224,3 +229,46 @@ class NewMachineInit: ObservableObject {
     }
 }
 
+// Fake AllMachines data only to make it easy to show realistic previews.
+extension AllMachines {
+    static private func fakeMachine(name: String, isRunning: Bool = false, isDefault: Bool = false) -> Machine {
+        // Use more realistic data?
+        Machine(name: name, dflt: isDefault, created: "TODO", running: isRunning, lastup: "TODO", stream: "TODO", vmtype: "TODO", cpus: 1, memory: "TODO", disksize: "TODO", port: 8888, remoteUsername: "TODO", identityPath: "TODO")
+    }
+
+    static private func previewWithData(_ data: [Machine]) -> AllMachines {
+        let res = AllMachines(machineListRetriever: { return data })
+        // Currently, creating an AllMachines() does not trigger actually loading the data.
+        // In real runs, that is only triggered when the top-level ContentView appears;
+        // for previews of individual views, we need to trigger the refresh explicitly.
+        res.reloadAll()
+        return res
+    }
+
+    static func previewWithNoMachines() -> AllMachines {
+        return previewWithData([Machine]())
+    }
+
+    static func previewWithOneRunningMachine() -> AllMachines {
+        return previewWithData(
+            [fakeMachine(name: "fedora", isRunning: true)]
+        )
+    }
+
+    static func previewWithOneStoppedMachine() -> AllMachines {
+        return previewWithData(
+            [fakeMachine(name: "fedora", isRunning: false)]
+        )
+    }
+
+    static func previewWithSeveralMachines() -> AllMachines {
+        return previewWithData(
+            [
+                fakeMachine(name: "ubuntu"),
+                fakeMachine(name: "fedora-running", isRunning: true),
+                fakeMachine(name: "centos-default", isDefault: true),
+                fakeMachine(name: "rhel"),
+            ]
+        )
+    }
+}
