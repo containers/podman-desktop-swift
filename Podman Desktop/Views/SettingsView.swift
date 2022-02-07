@@ -117,9 +117,19 @@ struct SettingsView: View {
     }
 }
 
-//struct SettingsView_Previews: PreviewProvider {
-//    @Binding var settings: Bool
-//    static var previews: some View {
-//        SettingsView(settings: settings)
-//    }
-//}
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        let situations: [(name: String, allMachines: AllMachines)] = [
+            ("Running", AllMachines.previewWithOneRunningMachine()),
+            ("Stopped", AllMachines.previewWithOneStoppedMachine()),
+            // Currently crashes
+            // ("No machine", AllMachines.previewWithNoMachines()),
+        ]
+        ForEach(situations, id: \.name) { s in
+            SettingsView()
+                .environmentObject(s.allMachines)
+                .environmentObject(ViewRouter())
+                .previewDisplayName(s.name)
+        }
+    }
+}

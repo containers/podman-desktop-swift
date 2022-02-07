@@ -41,8 +41,20 @@ struct MachineSelectView: View {
     }
 }
 
-//struct MachineSelectView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        MachineSelectView()
-//    }
-//}
+struct MachineSelectView_Previews: PreviewProvider {
+    static var previews: some View {
+        let situations: [(name: String, allMachines: AllMachines)] = [
+            ("Standard", AllMachines.previewWithSeveralMachines()),
+            // Currently crashes
+            // ("No machine", AllMachines.previewWithNoMachines()),
+        ]
+        ForEach(situations, id: \.name) { s in
+            VStack {
+                MachineSelectView()
+            }
+            .environmentObject(s.allMachines)
+            .environmentObject(ViewRouter())
+            .previewDisplayName(s.name)
+        }
+    }
+}

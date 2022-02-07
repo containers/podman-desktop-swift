@@ -94,3 +94,19 @@ struct MachineControls: View{
         .buttonStyle(PlainButtonStyle())
     }
 }
+
+struct HeaderView_Previews: PreviewProvider {
+    static var previews: some View {
+        let situations: [(name: String, allMachines: AllMachines)] = [
+            ("Running", AllMachines.previewWithOneRunningMachine()),
+            ("Stopped", AllMachines.previewWithOneStoppedMachine()),
+            ("No machine", AllMachines.previewWithNoMachines()),
+        ]
+        ForEach(situations, id: \.name) { s in
+            HeaderView()
+                .environmentObject(s.allMachines)
+                .environmentObject(ViewRouter())
+                .previewDisplayName(s.name)
+        }
+    }
+}
